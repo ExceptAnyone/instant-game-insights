@@ -1,9 +1,10 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Navbar from "@/components/ui/navbar";
+import { useNavigate } from "react-router-dom";
 import { 
   ChartContainer, 
   ChartTooltip, 
@@ -32,10 +33,14 @@ import {
   GamepadIcon,
   ClockIcon,
   AwardIcon,
-  StarIcon
+  StarIcon,
+  PlayIcon,
+  EyeIcon
 } from "lucide-react";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+
   // 샘플 데이터
   const performanceData = [
     { date: "1주차", score: 1200, kda: 1.2, winRate: 45 },
@@ -71,9 +76,21 @@ const Dashboard = () => {
     winRate: { label: "승률", color: "#10b981" },
   };
 
+  // 특정 시나리오로 시뮬레이터 이동 함수
+  const goToSimulatorWithContext = (scenario: string) => {
+    navigate(`/simulator?scenario=${scenario}`);
+  };
+
+  // 리플레이 특정 시점으로 이동 함수
+  const goToReplayMoment = (gameId: string, timestamp: number, context: string) => {
+    navigate(`/simulator?replay=${gameId}&time=${timestamp}&context=${context}`);
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-purple-900 to-slate-900 p-6">
-      <div className="container mx-auto">
+    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-purple-900 to-slate-900">
+      <Navbar />
+      
+      <div className="container mx-auto p-6">
         {/* 헤더 */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
@@ -84,9 +101,18 @@ const Dashboard = () => {
               </h1>
               <p className="text-gray-300 mt-2">박준혁님의 최근 5주간 성과 분석</p>
             </div>
-            <Button className="bg-purple-600 hover:bg-purple-700">
-              새 분석 시작
-            </Button>
+            <div className="flex gap-3">
+              <Button 
+                className="bg-purple-600 hover:bg-purple-700"
+                onClick={() => goToSimulatorWithContext('general')}
+              >
+                <PlayIcon className="w-4 h-4 mr-2" />
+                실시간 피드백 체험
+              </Button>
+              <Button className="bg-slate-700 hover:bg-slate-600">
+                새 분석 시작
+              </Button>
+            </div>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -216,7 +242,7 @@ const Dashboard = () => {
             </div>
           </TabsContent>
 
-          {/* 실수 분석 탭 */}
+          {/* 실수 분석 탭 - 클릭 가능한 피드백 추가 */}
           <TabsContent value="mistakes" className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <Card className="bg-slate-800/50 border-slate-700">
@@ -314,7 +340,7 @@ const Dashboard = () => {
             </Card>
           </TabsContent>
 
-          {/* 개선 제안 탭 */}
+          {/* 개선 제안 탭 - 시뮬레이터 연결 버튼 추가 */}
           <TabsContent value="tips">
             <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
@@ -325,22 +351,45 @@ const Dashboard = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {improvementTips.map((tip, index) => (
-                    <div key={index} className="p-4 bg-slate-700/50 rounded-lg border-l-4 border-purple-500">
-                      <div className="flex items-center justify-between mb-2">
-                        <Badge 
-                          className={
-                            tip.priority === "높음" ? "bg-red-600" :
-                            tip.priority === "중간" ? "bg-yellow-600" : "bg-green-600"
-                          }
-                        >
-                          {tip.priority} 우선순위
-                        </Badge>
-                        <span className="text-sm text-gray-400">{tip.category}</span>
-                      </div>
-                      <p className="text-white">{tip.tip}</p>
+                  <div className="p-4 bg-slate-700/50 rounded-lg border-l-4 border-purple-500">
+                    <div className="flex items-center justify-between mb-2">
+                      <Badge className="bg-red-600">높음 우선순위</Badge>
+                      <span className="text-sm text-gray-400">시야 관리</span>
                     </div>
-                  ))}
+                    <p className="text-white mb-3">라인전에서 상대 정글러 위치를 더 자주 확인하세요</p>
+                    <Button 
+                      size="sm" 
+                      className="bg-purple-600 hover:bg-purple-700"
+                      onClick={() => goToSimulatorWithContext('jungle_tracking')}
+                    >
+                      <PlayIcon className="w-4 h-4 mr-2" />
+                      시뮬레이터에서 연습하기
+                    </Button>
+                  </div>
+
+                  <div className="p-4 bg-slate-700/50 rounded-lg border-l-4 border-purple-500">
+                    <div className="flex items-center justify-between mb-2">
+                      <Badge className="bg-yellow-600">중간 우선순위</Badge>
+                      <span className="text-sm text-gray-400">스킬 사용</span>
+                    </div>
+                    <p className="text-white mb-3">스킬 콤보 연습을 통해 딜량을 더 늘려보세요</p>
+                    <Button 
+                      size="sm" 
+                      className="bg-purple-600 hover:bg-purple-700"
+                      onClick={() => goToSimulatorWithContext('skill_combo')}
+                    >
+                      <PlayIcon className="w-4 h-4 mr-2" />
+                      시뮬레이터에서 연습하기
+                    </Button>
+                  </div>
+
+                  <div className="p-4 bg-slate-700/50 rounded-lg border-l-4 border-purple-500">
+                    <div className="flex items-center justify-between mb-2">
+                      <Badge className="bg-green-600">낮음 우선순위</Badge>
+                      <span className="text-sm text-gray-400">템 빌드</span>
+                    </div>
+                    <p className="text-white">상황에 맞는 아이템 빌드를 연구해보세요</p>
+                  </div>
                 </div>
               </CardContent>
             </Card>

@@ -1,10 +1,11 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Progress } from "@/components/ui/progress";
+import Navbar from "@/components/ui/navbar";
+import { useSearchParams } from "react-router-dom";
 import { 
   PlayIcon, 
   PauseIcon, 
@@ -13,10 +14,12 @@ import {
   EyeIcon,
   TargetIcon,
   ShieldIcon,
-  SwordsIcon
+  SwordsIcon,
+  ArrowLeftIcon
 } from "lucide-react";
 
 const Simulator = () => {
+  const [searchParams] = useSearchParams();
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [currentFeedback, setCurrentFeedback] = useState<any>(null);
@@ -28,57 +31,97 @@ const Simulator = () => {
     gold: 8420
   });
 
-  // 시뮬레이션 피드백 데이터
-  const feedbackEvents = [
-    {
-      time: 3,
-      type: "warning",
-      icon: EyeIcon,
-      title: "시야 주의",
-      message: "적 정글러가 근처에 있을 수 있습니다. 와드를 설치하세요!",
-      color: "yellow"
-    },
-    {
-      time: 8,
-      type: "danger",
-      icon: AlertTriangleIcon,
-      title: "위험한 포지션",
-      message: "너무 앞으로 나가고 있습니다. 안전한 위치로 후퇴하세요!",
-      color: "red"
-    },
-    {
-      time: 15,
-      type: "tip",
-      icon: SwordsIcon,
-      title: "좋은 기회!",
-      message: "상대가 스킬을 빼먹었습니다. 공격적으로 나가세요!",
-      color: "green"
-    },
-    {
-      time: 22,
-      type: "warning",
-      icon: TargetIcon,
-      title: "CS 놓침",
-      message: "미니언 막타를 놓치고 있습니다. 집중하세요!",
-      color: "yellow"
-    },
-    {
-      time: 28,
-      type: "success",
-      icon: ShieldIcon,
-      title: "훌륭한 회피!",
-      message: "스킬샷을 잘 피했습니다. 이제 반격하세요!",
-      color: "blue"
-    },
-    {
-      time: 35,
-      type: "danger",
-      icon: AlertTriangleIcon,
-      title: "갱킹 위험",
-      message: "적 2명이 접근 중입니다. 즉시 후퇴하세요!",
-      color: "red"
+  // URL 파라미터에서 시나리오나 리플레이 정보 가져오기
+  const scenario = searchParams.get('scenario');
+  const replayId = searchParams.get('replay');
+  const replayTime = searchParams.get('time');
+  const replayContext = searchParams.get('context');
+
+  // 시나리오별 피드백 데이터
+  const getScenarioFeedback = () => {
+    if (replayContext === 'nocturne_gank') {
+      return [
+        {
+          time: 5,
+          type: "warning",
+          icon: EyeIcon,
+          title: "녹턴 감지됨",
+          message: "미니맵에서 녹턴이 하단으로 이동 중입니다. 주의하세요!",
+          color: "yellow"
+        },
+        {
+          time: 12,
+          type: "danger",
+          icon: AlertTriangleIcon,
+          title: "갱킹 위험!",
+          message: "녹턴이 접근하고 있습니다. 즉시 후퇴하세요!",
+          color: "red"
+        },
+        {
+          time: 18,
+          type: "critical",
+          icon: AlertTriangleIcon,
+          title: "실제 상황 재현",
+          message: "이 시점에서 실제로 갱킹을 당했습니다. 미니맵을 더 자주 확인했다면 피할 수 있었습니다.",
+          color: "red"
+        }
+      ];
     }
-  ];
+    
+    // 기본 시뮬레이션 피드백
+    return [
+      {
+        time: 3,
+        type: "warning",
+        icon: EyeIcon,
+        title: "시야 주의",
+        message: "적 정글러가 근처에 있을 수 있습니다. 와드를 설치하세요!",
+        color: "yellow"
+      },
+      {
+        time: 8,
+        type: "danger",
+        icon: AlertTriangleIcon,
+        title: "위험한 포지션",
+        message: "너무 앞으로 나가고 있습니다. 안전한 위치로 후퇴하세요!",
+        color: "red"
+      },
+      {
+        time: 15,
+        type: "tip",
+        icon: SwordsIcon,
+        title: "좋은 기회!",
+        message: "상대가 스킬을 빼먹었습니다. 공격적으로 나가세요!",
+        color: "green"
+      },
+      {
+        time: 22,
+        type: "warning",
+        icon: TargetIcon,
+        title: "CS 놓침",
+        message: "미니언 막타를 놓치고 있습니다. 집중하세요!",
+        color: "yellow"
+      },
+      {
+        time: 28,
+        type: "success",
+        icon: ShieldIcon,
+        title: "훌륭한 회피!",
+        message: "스킬샷을 잘 피했습니다. 이제 반격하세요!",
+        color: "blue"
+      },
+      {
+        time: 35,
+        type: "danger",
+        icon: AlertTriangleIcon,
+        title: "갱킹 위험",
+        message: "적 2명이 접근 중입니다. 즉시 후퇴하세요!",
+        color: "red"
+      }
+    ];
+  };
+
+  const feedbackEvents = getScenarioFeedback();
 
   // 시뮬레이션 타이머
   useEffect(() => {
@@ -147,13 +190,64 @@ const Simulator = () => {
     }
   };
 
+  // 컨텍스트별 제목과 설명 설정
+  const getContextInfo = () => {
+    if (replayContext === 'nocturne_gank') {
+      return {
+        title: "리플레이 분석: 녹턴 갱킹 상황",
+        description: `게임 ID: ${replayId} | 시점: ${replayTime}초 - 실제 게임에서 발생한 갱킹 상황을 재현합니다`
+      };
+    }
+    
+    if (scenario === 'vision_management') {
+      return {
+        title: "시야 관리 연습 모드",
+        description: "시야 관리 스킬을 향상시키기 위한 맞춤형 시뮬레이션"
+      };
+    }
+    
+    return {
+      title: "실시간 피드백 시뮬레이터",
+      description: "게임 중 AI 코치가 어떻게 피드백을 제공하는지 체험해보세요"
+    };
+  };
+
+  const contextInfo = getContextInfo();
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-purple-900 to-slate-900 p-6">
-      <div className="container mx-auto">
+    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-purple-900 to-slate-900">
+      <Navbar />
+      
+      <div className="container mx-auto p-6">
         {/* 헤더 */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">실시간 피드백 시뮬레이터</h1>
-          <p className="text-gray-300">게임 중 AI 코치가 어떻게 피드백을 제공하는지 체험해보세요</p>
+          <div className="flex items-center gap-4 mb-4">
+            {(replayId || scenario) && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => window.history.back()}
+                className="border-gray-500 text-gray-300 hover:bg-gray-500/10"
+              >
+                <ArrowLeftIcon className="w-4 h-4 mr-2" />
+                돌아가기
+              </Button>
+            )}
+            <div>
+              <h1 className="text-3xl font-bold text-white mb-2">{contextInfo.title}</h1>
+              <p className="text-gray-300">{contextInfo.description}</p>
+            </div>
+          </div>
+
+          {replayContext && (
+            <Alert className="mb-6 border-blue-500 bg-blue-900/20 text-blue-400">
+              <AlertTriangleIcon className="h-4 w-4" />
+              <AlertDescription>
+                <strong>실제 게임 분석:</strong> 이 시뮬레이션은 당신의 실제 게임 데이터를 기반으로 만들어졌습니다.
+                동일한 상황에서 어떻게 대처해야 하는지 학습해보세요.
+              </AlertDescription>
+            </Alert>
+          )}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
