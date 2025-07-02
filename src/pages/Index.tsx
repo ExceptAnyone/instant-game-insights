@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { GamepadIcon, TrendingUpIcon, ClockIcon, DollarSignIcon, BrainIcon, TargetIcon } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Index = () => {
   return (
@@ -25,9 +26,11 @@ const Index = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-            <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 text-lg">
-              🚀 지금 시작하기
-            </Button>
+            <Link to="/dashboard">
+              <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 text-lg">
+                🚀 지금 시작하기
+              </Button>
+            </Link>
             <Button size="lg" variant="outline" className="border-purple-500 text-purple-300 hover:bg-purple-500/10 px-8 py-3 text-lg">
               📹 데모 보기
             </Button>
@@ -231,9 +234,11 @@ const Index = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
-            <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white px-12 py-4 text-xl">
-              🎮 무료로 시작하기
-            </Button>
+            <Link to="/dashboard">
+              <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white px-12 py-4 text-xl">
+                🎮 무료로 시작하기
+              </Button>
+            </Link>
             <Button size="lg" variant="outline" className="border-purple-500 text-purple-300 hover:bg-purple-500/10 px-12 py-4 text-xl">
               더 알아보기
             </Button>
