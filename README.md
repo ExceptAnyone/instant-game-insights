@@ -1,73 +1,71 @@
-# Welcome to your Lovable project
+# 🧠 Instant Game Insights
 
-## Project info
+**AI 코치가 실시간으로 피드백을 제공해주는 게임 플레이 분석 서비스**입니다.
+게임 중 반복되는 실수를 인식하고, 실시간으로 조언을 제공하여
+**빠른 실력 향상과 전략적 플레이를 도와주는 AI 기반 개인 코칭 시스템**입니다.
 
-**URL**: https://lovable.dev/projects/73f51263-4d36-42d6-bed5-7edfaa784b9e
+---
 
-## How can I edit this code?
+## 🔗 배포 URL
 
-There are several ways of editing your application.
+👉 [https://instant-game-insights.lovable.app/](https://instant-game-insights.lovable.app/)
 
-**Use Lovable**
+---
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/73f51263-4d36-42d6-bed5-7edfaa784b9e) and start prompting.
+## 👤 페르소나
 
-Changes made via Lovable will be committed automatically to this repo.
+**실력을 늘리고 싶은 중급 게이머 - 박준혁 (24세)**
 
-**Use your preferred IDE**
+* **직업:** 대학생
+* **라이프스타일:** 수업 후 대부분의 여가시간을 게임에 사용
+* **목표:** 팀 게임에서 실수를 줄이고, 전략적인 플레이로 실력 향상
+* **니즈:** 나의 실수를 바로 피드백 받고 개선 방향을 알고 싶음
+* **페인 포인트:**
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+  * 내 실수가 정확히 뭔지 몰라 계속 같은 패턴 반복
+  * 유튜브 코칭은 시간이 오래 걸리고 비용이 부담됨
+  * 게임 중 실시간 조언이 없어 즉각적인 개선이 어려움
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+---
 
-Follow these steps:
+## 📌 사용자 스토리
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+> “게이머로서, 저는 게임 중 실시간으로 피드백을 받고 싶습니다.
+> 그래서 반복되는 실수를 줄이고, 더 빠르게 실력을 향상시킬 수 있습니다.”
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+---
 
-# Step 3: Install the necessary dependencies.
-npm i
+## ✅ 인수 조건 (Acceptance Criteria)
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+**Given:** 사용자가 AI 코치 앱을 실행하고 게임 클라이언트와 연동했을 때
+**When:** 사용자의 플레이 중 특정 실수나 전략적 오류가 감지되었을 때
+**Then:** 앱은 3초 이내에 시각적 또는 음성 피드백을 제공하여 개선 방향을 알려준다
 
-**Edit a file directly in GitHub**
+---
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 🎯 핵심 가치 제안
 
-**Use GitHub Codespaces**
+| 가치               | 설명                                  |
+| ---------------- | ----------------------------------- |
+| 🎯 **실시간 코칭 제공** | 플레이 중 실시간으로 피드백을 받아 즉각적인 개선 가능      |
+| 📊 **자동 분석 리포트** | 게임 종료 후 핵심 실수, 개선 포인트, 성장 추세 요약     |
+| 🔁 **개인화 학습**    | 사용자의 반복 실수를 추적하고 맞춤형 피드백 제공         |
+| 💸 **저비용 고효율**   | 유튜브 코칭이나 프로 코치 대비 시간과 비용을 아끼며 실력 향상 |
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
 
-## What technologies are used for this project?
+---
 
-This project is built with:
+## 🧩 향후 기능 계획 (Upcoming Features)
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+| 기능 이름                    | 설명                                                                      | 우선순위 |
+| ------------------------ | ----------------------------------------------------------------------- | ---- |
+| 🎯 **게임별 맞춤 코칭 템플릿**     | 롤, 발로란트, 오버워치 등 인기 게임마다 다른 피드백 전략 적용 (e.g. 포지션, 시야, KDA 분석 기준)          | ★★★  |
+| 🔁 **반복 실수 감지 및 학습 트래킹** | 사용자의 반복적인 실수를 자동 인식하고, 개선 과정을 시각화하여 성장 추세 보여주기                          | ★★★  |
+| 🧠 **AI 음성 코치 모드**       | 실시간 텍스트 피드백 외에, 코치처럼 말로 알려주는 음성 피드백 기능 (ex. “지금 너무 앞으로 나가고 있어요”)        | ★★☆  |
+| 📹 **클립 기반 분석 및 북마크 기능** | 결정적 순간(예: 데스, 한타 실수)을 자동으로 클립으로 저장하고, 코칭 리포트에 삽입                        | ★★☆  |
+| 🔗 **게임 클라이언트 자동 연동**    | Riot API, Overwolf 등과 자동 연동하여 플레이 데이터를 사용자 조작 없이 자동 분석                  | ★★★  |
+| 👥 **커뮤니티 공유 리포트 기능**    | 내 플레이 분석 리포트를 커뮤니티나 친구에게 공유해서 피드백 받기                                    | ★☆☆  |
+| 📊 **주간 리포트 & 성장 통계**    | 일간/주간 단위로 성적 추이, 실수 패턴, 개선 속도를 정리해주는 그래프 기반 통계 기능                       | ★★☆  |
+| 🧩 **GPT 기반 자연어 해설 리포트** | 플레이 리포트를 AI가 자연어로 요약/해설해주는 기능 (ex. “이번 판은 시야 부족으로 3번의 불리한 싸움을 유도했습니다.”) | ★★☆  |
 
-## How can I deploy this project?
 
-Simply open [Lovable](https://lovable.dev/projects/73f51263-4d36-42d6-bed5-7edfaa784b9e) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
