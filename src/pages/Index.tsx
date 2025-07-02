@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -31,9 +30,11 @@ const Index = () => {
                 🚀 지금 시작하기
               </Button>
             </Link>
-            <Button size="lg" variant="outline" className="border-purple-500 text-purple-300 hover:bg-purple-500/10 px-8 py-3 text-lg">
-              📹 데모 보기
-            </Button>
+            <Link to="/simulator">
+              <Button size="lg" variant="outline" className="border-purple-500 text-purple-300 hover:bg-purple-500/10 px-8 py-3 text-lg">
+                📹 데모 보기
+              </Button>
+            </Link>
           </div>
           
           <div className="flex justify-center items-center gap-8 text-sm text-gray-400">
