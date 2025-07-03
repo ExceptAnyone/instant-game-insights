@@ -115,7 +115,7 @@ const RecentGames = ({ onReplayClick }: RecentGamesProps) => {
                   <div key={index} className="flex items-center justify-between p-2 bg-slate-600/30 rounded text-sm">
                     <div className="flex items-center gap-2">
                       <AlertTriangleIcon className="w-4 h-4 text-orange-400" />
-                      <Badge className={getMistakeColor(mistake.type)} size="sm">
+                      <Badge className={getMistakeColor(mistake.type)}>
                         {mistake.type}
                       </Badge>
                       <span className="text-gray-300">{mistake.description}</span>
