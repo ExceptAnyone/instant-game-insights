@@ -4,7 +4,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Navbar from "@/components/ui/navbar";
+import GameTimeline from "@/components/simulator/GameTimeline";
+import AnalysisCharts from "@/components/simulator/AnalysisCharts";
+import UserComparison from "@/components/simulator/UserComparison";
 import { useSearchParams } from "react-router-dom";
 import { 
   PlayIcon, 
@@ -15,7 +19,10 @@ import {
   TargetIcon,
   ShieldIcon,
   SwordsIcon,
-  ArrowLeftIcon
+  ArrowLeftIcon,
+  VideoIcon,
+  BarChart3Icon,
+  UsersIcon
 } from "lucide-react";
 
 const Simulator = () => {
@@ -36,6 +43,65 @@ const Simulator = () => {
   const replayId = searchParams.get('replay');
   const replayTime = searchParams.get('time');
   const replayContext = searchParams.get('context');
+
+  // 타임라인 이벤트 데이터
+  const timelineEvents = [
+    {
+      time: 3,
+      type: 'neutral' as const,
+      title: '시야 부족 감지',
+      description: '적 정글러 위치 파악 불가',
+      impact: -15
+    },
+    {
+      time: 8,
+      type: 'bad' as const,
+      title: '위험한 포지셔닝',
+      description: '너무 앞으로 나가서 갱킹에 취약',
+      impact: -35
+    },
+    {
+      time: 15,
+      type: 'good' as const,
+      title: '좋은 트레이드',
+      description: '상대 스킬 회피 후 성공적인 맞교환',
+      impact: 45
+    },
+    {
+      time: 22,
+      type: 'bad' as const,
+      title: 'CS 놓침',
+      description: '연속 미니언 막타 실패',
+      impact: -20
+    },
+    {
+      time: 28,
+      type: 'good' as const,
+      title: '스킬샷 회피',
+      description: '완벽한 무빙으로 스킬 회피',
+      impact: 25
+    },
+    {
+      time: 35,
+      type: 'bad' as const,
+      title: '갱킹 당함',
+      description: '미니맵 미확인으로 갱킹 당함',
+      impact: -60
+    }
+  ];
+
+  // 분석 데이터
+  const analysisData = [
+    { time: 0, performance: 65, goldLead: 0, cs: 100, vision: 60, positioning: 70 },
+    { time: 5, performance: 62, goldLead: -50, cs: 98, vision: 45, positioning: 65 },
+    { time: 10, performance: 58, goldLead: -80, cs: 95, vision: 40, positioning: 55 },
+    { time: 15, performance: 71, goldLead: 20, cs: 102, vision: 50, positioning: 75 },
+    { time: 20, performance: 68, goldLead: 10, cs: 98, vision: 48, positioning: 72 },
+    { time: 25, performance: 74, goldLead: 35, cs: 105, vision: 55, positioning: 80 },
+    { time: 30, performance: 76, goldLead: 50, cs: 108, vision: 60, positioning: 82 },
+    { time: 35, performance: 52, goldLead: -100, cs: 95, vision: 35, positioning: 45 },
+    { time: 40, performance: 48, goldLead: -150, cs: 90, vision: 30, positioning: 40 }
+  ];
 
   // 시나리오별 피드백 데이터
   const getScenarioFeedback = () => {
@@ -175,6 +241,15 @@ const Simulator = () => {
     });
   };
 
+  const handleTimelineClick = (time: number) => {
+    setCurrentTime(time);
+  };
+
+  const handleUserSelect = (userId: string) => {
+    console.log('사용자 선택:', userId);
+    // 여기에 선택된 사용자의 플레이 분석 로직 추가
+  };
+
   const getColorClasses = (color: string) => {
     switch (color) {
       case 'red':
@@ -207,8 +282,8 @@ const Simulator = () => {
     }
     
     return {
-      title: "실시간 피드백 시뮬레이터",
-      description: "게임 중 AI 코치가 어떻게 피드백을 제공하는지 체험해보세요"
+      title: "AI 게임 분석 시뮬레이터",
+      description: "실제 게임 영상과 함께 상세한 분석을 제공합니다"
     };
   };
 
@@ -250,9 +325,9 @@ const Simulator = () => {
           )}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* 게임 화면 시뮬레이션 */}
-          <div className="lg:col-span-2 space-y-4">
+        <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+          {/* 메인 게임 화면 */}
+          <div className="xl:col-span-2 space-y-4">
             {/* 가상 게임 화면 */}
             <Card className="bg-slate-800/50 border-slate-700 relative overflow-hidden">
               <div className="aspect-video bg-gradient-to-br from-green-900/20 to-blue-900/20 relative">
@@ -337,56 +412,47 @@ const Simulator = () => {
             </Card>
           </div>
 
-          {/* 사이드 패널 */}
-          <div className="space-y-4">
-            {/* 피드백 목록 */}
-            <Card className="bg-slate-800/50 border-slate-700">
-              <CardHeader>
-                <CardTitle className="text-white text-lg">예정된 피드백</CardTitle>
-                <CardDescription>시뮬레이션 중 나타날 AI 조언들</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {feedbackEvents.map((event, index) => (
-                  <div
-                    key={index}
-                    className={`p-3 rounded-lg border ${
-                      currentTime >= event.time 
-                        ? 'bg-gray-700/50 border-gray-600 opacity-50'
-                        : 'bg-slate-700/50 border-slate-600'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2 mb-1">
-                      <event.icon className="w-4 h-4 text-gray-400" />
-                      <span className="text-sm font-medium text-white">{event.time}초</span>
-                      <Badge 
-                        className={`text-xs ${
-                          event.color === 'red' ? 'bg-red-600' :
-                          event.color === 'yellow' ? 'bg-yellow-600' :
-                          event.color === 'green' ? 'bg-green-600' :
-                          'bg-blue-600'
-                        }`}
-                      >
-                        {event.title}
-                      </Badge>
-                    </div>
-                    <p className="text-sm text-gray-300">{event.message}</p>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
+          {/* 분석 패널 */}
+          <div className="xl:col-span-2">
+            <Tabs defaultValue="timeline" className="h-full">
+              <TabsList className="grid w-full grid-cols-3 bg-slate-800 border-slate-700">
+                <TabsTrigger value="timeline" className="text-white">
+                  <VideoIcon className="w-4 h-4 mr-1" />
+                  타임라인
+                </TabsTrigger>
+                <TabsTrigger value="analysis" className="text-white">
+                  <BarChart3Icon className="w-4 h-4 mr-1" />
+                  분석
+                </TabsTrigger>
+                <TabsTrigger value="comparison" className="text-white">
+                  <UsersIcon className="w-4 h-4 mr-1" />
+                  비교
+                </TabsTrigger>
+              </TabsList>
 
-            {/* 설명 */}
-            <Card className="bg-slate-800/50 border-slate-700">
-              <CardHeader>
-                <CardTitle className="text-white text-lg">시뮬레이터 안내</CardTitle>
-              </CardHeader>
-              <CardContent className="text-sm text-gray-300 space-y-2">
-                <p>• 실제 게임 중 나타나는 AI 피드백을 미리 체험</p>
-                <p>• 위험 상황, 기회 포착, 실수 방지 등 다양한 조언</p>
-                <p>• 피드백은 3초간 표시된 후 자동으로 사라집니다</p>
-                <p>• 40초 시뮬레이션 후 자동 재시작</p>
-              </CardContent>
-            </Card>
+              <TabsContent value="timeline" className="mt-4">
+                <GameTimeline
+                  events={timelineEvents}
+                  currentTime={currentTime}
+                  onTimelineClick={handleTimelineClick}
+                  totalDuration={40}
+                />
+              </TabsContent>
+
+              <TabsContent value="analysis" className="mt-4">
+                <AnalysisCharts
+                  data={analysisData}
+                  currentTime={currentTime}
+                />
+              </TabsContent>
+
+              <TabsContent value="comparison" className="mt-4">
+                <UserComparison
+                  currentTime={currentTime}
+                  onUserSelect={handleUserSelect}
+                />
+              </TabsContent>
+            </Tabs>
           </div>
         </div>
       </div>
