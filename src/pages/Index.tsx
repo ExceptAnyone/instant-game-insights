@@ -25,7 +25,7 @@ import {
 const Index = () => {
   return (
     <>
-      <span>웹훅 테스트</span>
+      <span>웹훅 채널 테스트</span>
       <div className="min-h-screen bg-gradient-to-b from-slate-900 via-purple-900 to-slate-900">
         <Navbar />
 
